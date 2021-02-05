@@ -27,7 +27,6 @@
 </div>
 </template>
 <script>
-import request from '@/utils/request.js'
 export default {
   name: 'LoginIndex',
   data () {
@@ -48,28 +47,27 @@ export default {
       // 表单验证
 
       // 验证通过，提交登录
-      const user = this.user
       // 开启登陆中loading
       this.loginLoading = true
-      request({
-        method: 'post',
-        url: '/mp/v1_0/authorizations',
-        // data用来设置post请求体
-        data: user
+      this.$ajax.post('http://localhost:3001/api12', {
+        mobile: this.user.mobile,
+        code: this.user.code
       }).then(res => {
         this.$message({
           message: '登陆成功~',
           type: 'success'
         })
+        console.log('登录成功了终于!')
         this.loginLoading = false
       }).catch(err => {
         // eslint-disable-next-line no-unused-expressions
         console.log('登陆失败', err)
         this.$message({
-          message: '登陆成功~',
-          type: 'success',
+          message: err,
+          type: 'fail',
           showClose: true
         })
+        console.log('可你还是登录失败了!')
         this.loginLoading = false
       })
       // 处理后端相应结果
