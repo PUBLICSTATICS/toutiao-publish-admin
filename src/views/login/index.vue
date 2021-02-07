@@ -53,9 +53,9 @@ export default {
   data () {
     return {
       user: {
-        mobile: '',
-        code: '',
-        agree: false
+        mobile: '15637880787',
+        code: '123456',
+        agree: true
       },
       loginLoading: false,
       // loading提示，防止网络请求慢用户多次点击出发登录请求
@@ -103,6 +103,9 @@ export default {
         })
         console.log('登录成功了终于!')
         this.loginLoading = false
+        this.$router.push({
+          name: 'home'
+        })
       }).catch(err => {
         // eslint-disable-next-line no-unused-expressions
         console.log('登陆失败', err)
