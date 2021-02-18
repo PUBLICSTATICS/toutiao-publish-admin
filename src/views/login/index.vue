@@ -2,7 +2,7 @@
 <div class="login-container">
   <!-- el-form 表单组件
   每个表单项都必须使用el-form-item组件包裹 -->
-  <header class="login-header">欢迎使用即刻头条号</header>
+  <header class="login-header">欢迎使用智慧物业平台</header>
   <hr/>
   <!--
     配置Form表单验证:
