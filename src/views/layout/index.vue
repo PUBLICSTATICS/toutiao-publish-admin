@@ -10,16 +10,16 @@
           <i class='el-icon-s-fold'></i>
           <span>智慧物业平台</span>
         </div>
-        <el-dropdown>
+<el-dropdown>
   <span class="el-dropdown-link">
-      <img class="images" :src="tc01"/>
+    <img class="images" :src="user.avatar"/>
   </span>
   <el-dropdown-menu slot="dropdown">
-    <el-dropdown-item>个人设置</el-dropdown-item>
+    <el-dropdown-item @click.native='onSettings'>个人中心</el-dropdown-item>
+    <el-dropdown-item @click.native='onMessages'>消息列表</el-dropdown-item>
     <el-dropdown-item divided>退出登录</el-dropdown-item>
   </el-dropdown-menu>
 </el-dropdown>
-
       </el-header>
       <el-main class='main'>
       <router-view/>
@@ -30,7 +30,6 @@
 
 <script>
 import AppAside from './components/aside'
-import tc01 from '@/assets/img/QQ图片20210127181355.jpg'
 export default {
   name: 'LayOutIndex',
   components: {
@@ -41,7 +40,14 @@ export default {
   },
   data () {
     return {
-      tc01: tc01
+      hasLogin: false,
+      user: {
+        username: '请先登录',
+        avatar: 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png'
+      },
+      messages: {},
+      currentPage: 1,
+      total: 0
     }
   },
   computed: {
@@ -51,13 +57,33 @@ export default {
 
   },
   created () {
-
+    if (this.$store.getters.getUser.name) {
+      this.user.username = this.$store.getters.getUser.name
+      this.user.avatar = 'http://localhost:8080\\img\\' + this.$store.getters.getUser.avatar
+      this.hasLogin = true
+    }
   },
   mounted () {
 
   },
   methods: {
-
+    onSettings () {
+      this.$router.push('/settings')
+    },
+    onMessages () {
+      this.$router.push('/messages')
+    },
+    logout () {
+      const _this = this
+      this.$axios.get('http://localhost:8081/logout', {
+        headers: {
+          Authorization: localStorage.getItem('token')
+        }
+      }).then((res) => {
+        _this.$store.commit('REMOVE_INFO')
+        _this.$router.push('/login')
+      })
+    }
   }
 }
 </script>

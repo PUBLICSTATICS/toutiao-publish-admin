@@ -21,15 +21,15 @@
   :model="user"
   :rules = 'formRules'
   >
-  <el-form-item prop='mobile'>
+  <el-form-item prop='phone'>
     <el-tooltip class="item" effect="dark" content="请输入正确格式的手机号" placement="right">
-    <el-input v-model="user.mobile"
+    <el-input v-model="user.phone"
     placeholder="请输入手机号"></el-input>
     </el-tooltip>
   </el-form-item>
-  <el-form-item prop='code'>
-    <el-tooltip class="item" effect="dark" content="请输入六位数验证码" placement="right">
-    <el-input v-model="user.code"
+  <el-form-item prop='pwd'>
+    <el-tooltip class="item" effect="dark" content="请输入密码" placement="right">
+    <el-input v-model="user.pwd"
     placeholder="请输入验证码"></el-input>
         </el-tooltip>
   </el-form-item>
@@ -53,18 +53,18 @@ export default {
   data () {
     return {
       user: {
-        mobile: '15637880787',
-        code: '123456',
+        phone: '15637880787',
+        pwd: '123456',
         agree: true
       },
       loginLoading: false,
       // loading提示，防止网络请求慢用户多次点击出发登录请求
       formRules: {
-        mobile: [
+        phone: [
           { required: true, message: '手机号不能为空', trigger: 'blur' },
           { min: 11, max: 11, message: '手机号必须是11位', trigger: 'blur' }
         ],
-        code: [
+        pwd: [
           { required: true, message: '请输入验证码', trigger: 'blur' }
         ],
         /**
@@ -96,6 +96,7 @@ export default {
     },
     login () {
       this.loginLoading = true
+      const _this = this
       login(this.user).then(res => {
         this.$message({
           message: '登陆成功~',
@@ -103,18 +104,14 @@ export default {
         })
         console.log('登录成功了终于!')
         this.loginLoading = false
+        const jwt = res.headers.authorization
+        const userInfo = res.data.data
+        _this.$store.commit('SET_TOKEN', jwt)
+        _this.$store.commit('SET_USERINFO', userInfo)
         this.$router.push({
           name: 'home'
         })
-      }).catch(err => {
-        // eslint-disable-next-line no-unused-expressions
-        console.log('登陆失败', err)
-        this.$message({
-          message: err,
-          type: 'fail',
-          showClose: true
-        })
-        console.log('可你还是登录失败了!')
+      }).catch(res => {
         this.loginLoading = false
       })
       // 处理后端相应结果
